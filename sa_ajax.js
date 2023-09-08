@@ -5,13 +5,14 @@
  SAA Ajax
  Autor: Sergio Abreu A.
  dosergio@gmail.com
- Version 4.3
+ Version 4.5
  Created 2006
- Updated 07 Jul 2022
- 
- License: LGPL
- 
- */
+ Updated 08 Sep 2023
+
+ License: LGPL 
+
+*/
+
 function getXMLHttp() {
   if (window.XMLHttpRequest) {
     return new XMLHttpRequest();
@@ -21,7 +22,14 @@ function getXMLHttp() {
 }
 var ObjAjax = {
   objs: [],
+  charset: 'utf-8',
+  referrer: 'https://sa_ajax.com', /* <<< change it <<< */
   add: function(ourl, ocallback /*[, ("text"|"xml"), ("get"|"post"), formName ]*/) {
+         var proto1 = ourl.substr(0,5), proto2 = top.location.href.substr(0,5);
+         if( proto1 != proto2){
+           console.warn('SA_AJAX: You are using different protocols (' + proto1 + ' x ' + proto2 +
+                        '): it may cause CORS errors');
+         }
     var tmp_count = this.objs.length;
     this.objs.push(
             {
@@ -33,13 +41,12 @@ var ObjAjax = {
               file: null,
               fileId: (arguments.length >= 6 ? arguments[5] : null),
               headerProp: 'Content-Type',
-              headerMime: 'application/x-www-form-urlencoded;charset=windows-1252',
+              headerMime: 'application/x-www-form-urlencoded;charset=utf-8',
               dados: null,
               name: "sajax" + tmp_count,
               type: (arguments.length >= 3 ? arguments[2] : 'text'),
               method: (arguments.length >= 4 ? arguments[3].toLowerCase() : 'get'),
-              formName: (arguments.length >= 5 && 
-                          typeof arguments[4] === 'string' ? arguments[4] : null),
+              formName: (arguments.length >= 5 && arguments[4].tagName === 'FORM' ? arguments[4] : null),
               objSend: (arguments.length >= 5 && 
                           typeof arguments[4] === 'object' ? arguments[4] : null),
               init: function() {
@@ -91,12 +98,15 @@ var ObjAjax = {
                    else if (this.method == 'post'){ // Vale pro form e objeto
 
                           this.xm.setRequestHeader(this.headerProp, this.headerMime);                         
-                          this.xm.overrideMimeType('text/plain;charset=windows-1252'); 
+                          this.xm.overrideMimeType('text/plain;charset=' + ObjAjax.charset); 
 
                     }
-                   else { // Get
-
-                       this.xm.overrideMimeType('text/html;charset=windows-1252');
+                   else { // Get Headers:
+                     
+                       if( ! ObjAjax.referrer.match(/sa_ajax\.com/) ) // informed                      
+                             this.xm.setRequestHeader('Referrer', ObjAjax.referrer)
+                          
+                           this.xm.overrideMimeType('text/html;charset=' + ObjAjax.charset);
                     }
                  // console.log('Dados: ' , this.dados);
                  
@@ -135,10 +145,9 @@ var ObjAjax = {
                 }
                 return s;
                },
-              queryForm: function(fo) {
-                var s = "";
-                if (typeof fo == 'string')
-                  fo = eval("document." + fo);
+              queryForm: function(form) {
+                var s = "";               
+                fo = form; // use Dom object.
                 with (fo) {
                   for (var i = 0; i < elements.length; i++) {
                     el = elements[i];
@@ -247,10 +256,10 @@ function AjaxPostObj( url, obj /*[, func, ("text"|"xml")] */) {
   ObjAjax.add(url, callback, type, 'post', obj);
 }
 
-function AjaxPost(url, form_name /*[, func, ("text"|"xml")] */) {
+function AjaxPost(url, form_element /*[, func, ("text"|"xml")] */) {
   var callback = arguments.length < 3 ? null : arguments[2];
   var type = arguments.length <= 3 ? 'text' : arguments[3];
-  ObjAjax.add(url, callback, type, 'post', form_name);
+  ObjAjax.add(url, callback, type, 'post', form_element);
 }
 
 function AjaxUpload(url, form_name /*[,func,fileId,("text"|"xml"), "put"]*/
