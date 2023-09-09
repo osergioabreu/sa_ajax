@@ -173,7 +173,6 @@ var ObjAjax = {
                     }
                   }
                 }
-                alert(s);
                 return s;
               }
             });
