@@ -5,14 +5,13 @@
  SAA Ajax
  Autor: Sergio Abreu A.
  dosergio@gmail.com
- Version 4.5
+ Version 4.3
  Created 2006
- Updated 08 Sep 2023
-
- License: LGPL 
-
-*/
-
+ Updated 07 Jul 2022
+ 
+ License: LGPL
+ 
+ */
 function getXMLHttp() {
   if (window.XMLHttpRequest) {
     return new XMLHttpRequest();
@@ -23,7 +22,7 @@ function getXMLHttp() {
 var ObjAjax = {
   objs: [],
   charset: 'utf-8',
-  referrer: 'https://sa_ajax.com', /* <<< change it <<< */
+  referer: 'https://sa_ajax.com', /* <<< change it <<< */
   add: function(ourl, ocallback /*[, ("text"|"xml"), ("get"|"post"), formName ]*/) {
          var proto1 = ourl.substr(0,5), proto2 = top.location.href.substr(0,5);
          if( proto1 != proto2){
@@ -103,8 +102,8 @@ var ObjAjax = {
                     }
                    else { // Get Headers:
                      
-                       if( ! ObjAjax.referrer.match(/sa_ajax\.com/) ) // informed                      
-                             this.xm.setRequestHeader('Referrer', ObjAjax.referrer)
+                       if( ! ObjAjax.referer.match(/sa_ajax\.com/))                       
+                             this.xm.setRequestHeader('Referrer', ObjAjax.referer)
                           
                            this.xm.overrideMimeType('text/html;charset=' + ObjAjax.charset);
                     }
@@ -125,7 +124,7 @@ var ObjAjax = {
                       }
                     }
                   } else {
-                    this.xm.setRequestHeader('UPLOAD-' + el.name, escape(el.value));
+                    this.xm.setRequestHeader('UPLOAD-' + el.name, escapePlus(el.value));
                   }
                 }
                 if (file) {
@@ -140,7 +139,7 @@ var ObjAjax = {
                 for( var a in obj){
                   if( typeof a === 'string'){
                     
-                    s += (s ? "&" : "") + a + "=" + escape( obj[a]);
+                    s += (s ? "&" : "") + a + "=" + escapePlus( obj[a]);
                   }
                 }
                 return s;
@@ -155,18 +154,18 @@ var ObjAjax = {
                       case 'radio':
                       case 'checkbox':
                         if (el.checked)
-                          s += (s ? "&" : "") + el.name + "=" + escape(el.value);
+                          s += (s ? "&" : "") + el.name + "=" + escapePlus(el.value);
                         break;
                       default:
                         if (el.name && el.tagName != 'SELECT')
-                          s += (s ? "&" : "") + el.name + "=" + escape(el.value);
+                          s += (s ? "&" : "") + el.name + "=" + escapePlus(el.value);
                         else {
                           if (!el.multiple)
-                            s += (s ? "&" : "") + el.name + "=" + escape(el.value);
+                            s += (s ? "&" : "") + el.name + "=" + escapePlus(el.value);
                           else {
                             for (var j = 0; j < el.options.length; j++) {
                               if (el.options[j].selected)
-                                s += (s ? "&" : "") + el.name + "=" + escape(el.options[j].value);
+                                s += (s ? "&" : "") + el.name + "=" + escapePlus(el.options[j].value);
                             }
                           }
 
@@ -174,6 +173,7 @@ var ObjAjax = {
                     }
                   }
                 }
+                alert(s);
                 return s;
               }
             });
@@ -214,6 +214,9 @@ var ObjAjax = {
     this.objs = tobjs;
   }
 };
+
+
+function escapePlus(s){ return escape(s).replace(/\+/g, '%2B'); }
 
 function AjaxTest(url) {
    
