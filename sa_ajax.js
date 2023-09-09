@@ -5,9 +5,9 @@
  SAA Ajax
  Autor: Sergio Abreu A.
  dosergio@gmail.com
- Version 4.3
+ Version 4.4
  Created 2006
- Updated 07 Jul 2022
+ Updated 09 Sept 2023
  
  License: LGPL
  
@@ -40,7 +40,7 @@ var ObjAjax = {
               file: null,
               fileId: (arguments.length >= 6 ? arguments[5] : null),
               headerProp: 'Content-Type',
-              headerMime: 'application/x-www-form-urlencoded;charset=utf-8',
+              headerMime: 'application/x-www-form-urlencoded;charset=' + ObjAjax.charset,
               dados: null,
               name: "sajax" + tmp_count,
               type: (arguments.length >= 3 ? arguments[2] : 'text'),
