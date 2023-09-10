@@ -25,7 +25,7 @@ var ObjAjax = {
   referer: 'https://sa_ajax.com', /* <<< change it <<< */
   add: function(ourl, ocallback /*[, ("text"|"xml"), ("get"|"post"), formName ]*/) {
          var proto1 = ourl.substr(0,5), proto2 = top.location.href.substr(0,5);
-         if( proto1 != proto2){
+         if( proto1.match(/^http/) && proto2.match(/^http/) && proto1 != proto2){
            console.warn('SA_AJAX: You are using different protocols (' + proto1 + ' x ' + proto2 +
                         '): it may cause CORS errors');
          }
