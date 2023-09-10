@@ -45,7 +45,8 @@ var ObjAjax = {
               name: "sajax" + tmp_count,
               type: (arguments.length >= 3 ? arguments[2] : 'text'),
               method: (arguments.length >= 4 ? arguments[3].toLowerCase() : 'get'),
-              formName: (arguments.length >= 5 && arguments[4].tagName === 'FORM' ? arguments[4] : null),
+              formName: (arguments.length >= 5 && arguments[4].tagName && 
+                         arguments[4].tagName === 'FORM' ? arguments[4] : null),
               objSend: (arguments.length >= 5 && 
                           typeof arguments[4] === 'object' ? arguments[4] : null),
               init: function() {
@@ -145,8 +146,9 @@ var ObjAjax = {
                },
               queryForm: function(form) {
                 var s = "";               
-                fo = form; // use Dom object.
-                with (fo) {
+             // use Dom object.
+               if(! (form && form.tagName && form.tagName === 'FORM')) return;
+                with (form) {
                   for (var i = 0; i < elements.length; i++) {
                     el = elements[i];
                     switch (el.type) {
