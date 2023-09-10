@@ -106,8 +106,7 @@ var ObjAjax = {
                              this.xm.setRequestHeader('Referrer', ObjAjax.referer);
                           
                            this.xm.overrideMimeType('text/html;charset=' + ObjAjax.charset);
-                    }
-                 // console.log('Dados: ' , this.dados);
+                    } 
                  
                 this.xm.send(this.dados);
               },
