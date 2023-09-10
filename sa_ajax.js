@@ -103,7 +103,7 @@ var ObjAjax = {
                    else { // Get Headers:
                      
                        if( ! ObjAjax.referer.match(/sa_ajax\.com/))                       
-                             this.xm.setRequestHeader('Referrer', ObjAjax.referer)
+                             this.xm.setRequestHeader('Referrer', ObjAjax.referer);
                           
                            this.xm.overrideMimeType('text/html;charset=' + ObjAjax.charset);
                     }
