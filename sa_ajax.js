@@ -87,27 +87,30 @@ var ObjAjax = {
                 this.xm.open( this.method, this.url, true);
                 //setRequestHeader must be after open
                    
-                  if ( this.method == 'put' && this.formName ) {
+                  if ( this.method == 'put' && this.form ) {
 
-                           this.file = this.getFile(this.formName, this.fileId);
+                           this.file = this.getFile(this.form, this.fileId);
                            this.dados = this.file;
                            this.xm.setRequestHeader('X-File-Name', this.file.name);
                            this.xm.setRequestHeader('X-File-Size', this.file.size);
 
                    }
-                   else if (this.method == 'post'){ // Vale pro form e objeto
+                   else if ( this.method.match(/post/i) ){ // Vale pro form e objeto
 
-                          this.xm.setRequestHeader(this.headerProp, this.headerMime);                         
-                          this.xm.overrideMimeType('text/plain;charset=' + ObjAjax.charset); 
+                          this.xm.setRequestHeader(this.headerProp, this.headerMime);
+                          this.xm.setRequestHeader('X-Requested-With', 'xmlhttprequest');    
+                          this.xm.overrideMimeType('text/plain;charset=' + ObjAjax.charset);
 
                     }
-                   else { // Get Headers:
-                     
-                       if( ! ObjAjax.referer.match(/sa_ajax\.com/))                       
+                   else if ( this.method.match(/get/i) ) { // Get Headers:
+
+                       if( ! ObjAjax.referer.match(/sa_ajax\.com/))
                              this.xm.setRequestHeader('Referrer', ObjAjax.referer);
-                          
-                           this.xm.overrideMimeType('text/html;charset=' + ObjAjax.charset);
-                    } 
+                    
+                       this.xm.setRequestHeader('X-Requested-With', 'xmlhttprequest');  
+                       this.xm.overrideMimeType('text/plain;charset=' + ObjAjax.charset);
+                    }
+                 
                  
                 this.xm.send(this.dados);
               },
